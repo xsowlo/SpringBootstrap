@@ -1,6 +1,9 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +18,7 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -25,6 +28,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmailWithRoles(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Not naideno: " + email);
+        }
+        return user;
+    }
 
     @Override
     public void save(User user) {
@@ -42,6 +54,26 @@ public class UserServiceImpl implements UserService {
             user.setRoles(roles);
         }
 
+        if (user.getRole() != null && !user.getRole().isEmpty()) {
+            Set<Role> roles = new HashSet<>();
+            if ("ADMIN".equals(user.getRole())) {
+                Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+                if (adminRole != null) roles.add(adminRole);
+                Role userRole = roleRepository.findByName("ROLE_USER");
+                if (userRole != null) roles.add(userRole);
+            } else {
+                Role userRole = roleRepository.findByName("ROLE_USER");
+                if (userRole != null) roles.add(userRole);
+            }
+            user.setRoles(roles);
+        } else if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            Role userRole = roleRepository.findByName("ROLE_USER");
+            if (userRole != null) {
+                user.setRoles(Set.of(userRole));
+            }
+        }
+
+
         userRepository.save(user);
     }
 
@@ -52,8 +84,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findByUsername(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f4f4f4;
+            background-color: #f8f9fa;
         }
         .top-header {
             background-color: #343a40;
@@ -19,65 +19,233 @@
         }
         .sidebar {
             min-height: 100vh;
-            background-color: #f4f4f4;
+            background-color: white;
             padding-top: 20px;
+            border-right: 1px solid #dee2e6;
         }
         .sidebar .nav-link {
-            background-color: #007bff;
-            color: white;
-            margin: 10px;
+            color: #0d6efd;
+            margin: 5px 15px;
+            padding: 8px 15px;
             border-radius: 4px;
-            text-align: center;
-            padding: 10px;
+            text-align: left;
+        }
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
         }
         .sidebar .nav-link:hover {
-            background-color: #0056b3;
+            background-color: #e9ecef;
+        }
+        .sidebar .nav-link.active:hover {
+            background-color: #0d6efd;
+            color: white;
         }
         .main-content {
             padding: 20px;
         }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        .nav-tabs {
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        .nav-tabs .nav-link {
+            color: #0d6efd;
+            border: none;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-tabs .nav-link.active {
+            color: #495057;
+            background-color: white;
+            border-bottom: 2px solid white;
+        }
+        .section-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border: 1px solid #dee2e6;
+            border-bottom: none;
+            font-size: 1.1rem;
+        }
         .table-container {
             background-color: white;
-            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+        }
+        .table {
+            margin-bottom: 0;
         }
         .table th, .table td {
             border-top: none;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+            padding: 12px;
         }
+        .table thead th {
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+        }
+
+
+        .table.table-dimmed tbody tr:nth-child(odd) td {
+            background-color: #d1d1d1 !important;
+            color: #000 !important;
+        }
+
+        .table.table-dimmed tbody tr:nth-child(even) td {
+            background-color: #ffffff !important;
+            color: #000 !important;
+        }
+
+        .table.table-dimmed tbody tr:hover td {
+            background-color: inherit !important;
+        }
+
         .btn-edit {
             background-color: #17a2b8;
             color: white;
             border: none;
+            padding: 4px 12px;
         }
         .btn-edit:hover {
             background-color: #138496;
             color: white;
         }
-        .modal-form-control {
-            background-color: #fff7c0;
-            border: 1px solid #ced4da;
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 12px;
         }
-        .modal-form-control-white {
+        .btn-delete:hover {
+            background-color: #c82333;
+            color: white;
+        }
+
+        .modal-header {
+            background-color: white;
+            border-bottom: 1px solid #dee2e6;
+            padding: 20px;
+        }
+        .modal-title {
+            font-weight: normal;
+            font-size: 1.25rem;
+        }
+        .modal-body {
+            padding: 30px;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            text-align: center;
+        }
+        .form-control-yellow {
+            background-color: #ffeeba;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            text-align: left;
+            width: 100%;
+            max-width: 220px;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        .form-control-white {
             background-color: white;
             border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            text-align: left;
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            max-width: 220px;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
-        .modal-role-select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ced4da;
-        }
-        .modal-readonly {
+        .form-control-readonly {
             background-color: #e9ecef;
             border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            text-align: left;
             width: 100%;
+            max-width: 220px;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        .role-select {
+            width: 100%;
+            max-width: 220px;
             padding: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #80bdff;
+            background-color: white;
+            text-align: left;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            height: 64px;
+            overflow-y: scroll;
+        }
+        .role-select::-webkit-scrollbar {
+            width: 16px;
+        }
+        .role-select::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .role-select::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+        }
+        .role-select option {
+            padding: 8px 12px;
+            background-color: white;
+            color: black;
+        }
+        .role-select option:checked {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .modal-footer {
+            border-top: 1px solid #dee2e6;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
         }
     </style>
 </head>
@@ -85,10 +253,10 @@
 
 <div class="top-header">
     <div>
-        <span th:text="${currentUser.email}">admin@mail.ru</span>
+        <span th:text="${#authentication.name}">admin@mail.ru</span>
         with roles:
-        <span th:each="role, iterStat : ${currentUser.roles}">
-            <span th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span><span th:if="${!iterStat.last}"> </span>
+        <span th:each="authority, iterStat : ${#authentication.authorities}">
+            <span th:text="${#strings.replace(authority.authority, 'ROLE_', '')}"></span><span th:if="${!iterStat.last}"> </span>
         </span>
     </div>
     <div>
@@ -103,21 +271,28 @@
         <div class="col-md-2 sidebar">
             <nav class="nav flex-column">
                 <a class="nav-link active" href="/admin">Admin</a>
+                <a class="nav-link" href="/user">User</a>
             </nav>
         </div>
 
         <div class="col-md-10 main-content">
             <h1 class="page-title">Admin panel</h1>
 
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/admin">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/user/new">New User</a>
+                </li>
+            </ul>
+
+            <div class="section-header">
+                All users
+            </div>
+
             <div class="table-container">
-                <div class="d-flex align-items-center mb-3" style="gap: 20px;">
-                    <a href="/admin" class="text-decoration-none" style="color: #0d6efd;">Users table</a>
-                    <a href="/admin/user/new" class="text-decoration-none" style="color: #0d6efd;">New User</a>
-                </div>
-
-                <h5 class="mb-3">All users</h5>
-
-                <table class="table">
+                <table class="table" id="usersTable">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -155,7 +330,7 @@
                             </button>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                            <button type="button" class="btn btn-delete btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                     th:data-id="${user.id}"
                                     th:data-firstname="${user.firstName}"
                                     th:data-lastname="${user.lastName}"
@@ -181,35 +356,36 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editForm" th:action="@{/admin/user/save}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="modal-body">
                     <input type="hidden" name="id" id="edit-id">
                     <div>
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" id="edit-username" class="modal-form-control" required>
+                        <label class="form-label">ID</label>
+                        <input type="text" id="edit-id-display" class="form-control-readonly" readonly>
                     </div>
                     <div>
                         <label class="form-label">First name</label>
-                        <input type="text" name="firstName" id="edit-firstname" class="modal-form-control" required>
+                        <input type="text" name="firstName" id="edit-firstname" class="form-control-white" required>
                     </div>
                     <div>
                         <label class="form-label">Last name</label>
-                        <input type="text" name="lastName" id="edit-lastname" class="modal-form-control" required>
+                        <input type="text" name="lastName" id="edit-lastname" class="form-control-white" required>
                     </div>
                     <div>
                         <label class="form-label">Age</label>
-                        <input type="number" name="age" id="edit-age" class="modal-form-control-white" required>
+                        <input type="number" name="age" id="edit-age" class="form-control-white" required>
                     </div>
                     <div>
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" id="edit-email" class="modal-form-control" required>
+                        <input type="email" name="email" id="edit-email" class="form-control-white" required>
                     </div>
                     <div>
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" id="edit-password" class="modal-form-control-white" placeholder="Leave empty to keep current">
+                        <input type="password" name="password" id="edit-password" class="form-control-white">
                     </div>
                     <div>
                         <label class="form-label">Role</label>
-                        <select name="role" id="edit-role" class="modal-role-select">
+                        <select name="role" id="edit-role" class="role-select" size="2">
                             <option value="ADMIN">ADMIN</option>
                             <option value="USER">USER</option>
                         </select>
@@ -231,28 +407,29 @@
                 <h5 class="modal-title" id="deleteModalLabel">Delete user</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="deleteForm" th:action="@{/admin/user/delete}" method="post">
+            <form id="deleteForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="modal-body">
                     <input type="hidden" name="id" id="delete-id">
                     <div>
                         <label class="form-label">ID</label>
-                        <input type="text" id="delete-id-display" class="modal-readonly" readonly>
+                        <input type="text" id="delete-id-display" class="form-control-readonly" readonly>
                     </div>
                     <div>
                         <label class="form-label">First name</label>
-                        <input type="text" id="delete-firstname" class="modal-readonly" readonly>
+                        <input type="text" id="delete-firstname" class="form-control-readonly" readonly>
                     </div>
                     <div>
                         <label class="form-label">Last name</label>
-                        <input type="text" id="delete-lastname" class="modal-readonly" readonly>
-                    </div>
-                    <div>
-                        <label class="form-label">Role</label>
-                        <input type="text" id="delete-role" class="modal-readonly" readonly>
+                        <input type="text" id="delete-lastname" class="form-control-readonly" readonly>
                     </div>
                     <div>
                         <label class="form-label">Email</label>
-                        <input type="text" id="delete-email" class="modal-readonly" readonly>
+                        <input type="text" id="delete-email" class="form-control-readonly" readonly>
+                    </div>
+                    <div>
+                        <label class="form-label">Role</label>
+                        <input type="text" id="delete-role" class="form-control-readonly" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -266,40 +443,63 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.querySelectorAll('[data-bs-target="#editModal"]').forEach(button => {
-        button.addEventListener('click', function() {
-            document.getElementById('edit-id').value = this.getAttribute('data-id');
-            document.getElementById('edit-username').value = this.getAttribute('data-username');
-            document.getElementById('edit-firstname').value = this.getAttribute('data-firstname');
-            document.getElementById('edit-lastname').value = this.getAttribute('data-lastname');
-            document.getElementById('edit-age').value = this.getAttribute('data-age');
-            document.getElementById('edit-email').value = this.getAttribute('data-email');
-            const roles = this.getAttribute('data-roles');
-            const roleSelect = document.getElementById('edit-role');
-            if (roles && roles.includes('ADMIN')) {
-                roleSelect.value = 'ADMIN';
-            } else {
-                roleSelect.value = 'USER';
-            }
-            document.getElementById('edit-password').value = '';
+
+    function applyTableDimming() {
+        const table = document.getElementById('usersTable');
+        if (table) table.classList.add('table-dimmed');
+    }
+
+    function removeTableDimming() {
+        const table = document.getElementById('usersTable');
+        if (table) table.classList.remove('table-dimmed');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const editModal = document.getElementById('editModal');
+        const deleteModal = document.getElementById('deleteModal');
+
+        editModal.addEventListener('show.bs.modal', applyTableDimming);
+        editModal.addEventListener('hidden.bs.modal', removeTableDimming);
+        deleteModal.addEventListener('show.bs.modal', applyTableDimming);
+        deleteModal.addEventListener('hidden.bs.modal', removeTableDimming);
+
+        document.querySelectorAll('[data-bs-target="#editModal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('edit-id').value = this.getAttribute('data-id');
+                document.getElementById('edit-id-display').value = this.getAttribute('data-id');
+                document.getElementById('edit-firstname').value = this.getAttribute('data-firstname');
+                document.getElementById('edit-lastname').value = this.getAttribute('data-lastname');
+                document.getElementById('edit-age').value = this.getAttribute('data-age');
+                document.getElementById('edit-email').value = this.getAttribute('data-email');
+                const roles = this.getAttribute('data-roles');
+                const roleSelect = document.getElementById('edit-role');
+                if (roles && roles.includes('ADMIN')) {
+                    roleSelect.value = 'ADMIN';
+                } else {
+                    roleSelect.value = 'USER';
+                }
+                document.getElementById('edit-password').value = '';
+            });
         });
-    });
 
-    document.querySelectorAll('[data-bs-target="#deleteModal"]').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            const firstName = this.getAttribute('data-firstname');
-            const lastName = this.getAttribute('data-lastname');
-            const email = this.getAttribute('data-email');
-            const roles = this.getAttribute('data-roles');
-            const age = this.getAttribute('data-age');
+        document.querySelectorAll('[data-bs-target="#deleteModal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const firstName = this.getAttribute('data-firstname');
+                const lastName = this.getAttribute('data-lastname');
+                const email = this.getAttribute('data-email');
+                const roles = this.getAttribute('data-roles');
 
-            document.getElementById('delete-id').value = id;
-            document.getElementById('delete-id-display').value = id;
-            document.getElementById('delete-firstname').value = firstName;
-            document.getElementById('delete-lastname').value = lastName;
-            document.getElementById('delete-email').value = email;
-            document.getElementById('delete-role').value = roles;
+                document.getElementById('delete-id').value = id;
+                document.getElementById('delete-id-display').value = id;
+                document.getElementById('delete-firstname').value = firstName;
+                document.getElementById('delete-lastname').value = lastName;
+                document.getElementById('delete-email').value = email;
+                document.getElementById('delete-role').value = roles;
+
+                const deleteForm = document.getElementById('deleteForm');
+                deleteForm.action = '/admin/user/delete/' + id;
+            });
         });
     });
 </script>
