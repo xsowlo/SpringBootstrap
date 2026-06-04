@@ -40,43 +40,64 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void save(User user) {
-
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            Set<Role> roles = new HashSet<>();
-            Role userRole = roleRepository.findByName("ROLE_USER");
-            if (userRole != null) {
-                roles.add(userRole);
-            }
-            user.setRoles(roles);
-        }
-
-        if (user.getRole() != null && !user.getRole().isEmpty()) {
-            Set<Role> roles = new HashSet<>();
-            if ("ADMIN".equals(user.getRole())) {
-                Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-                if (adminRole != null) roles.add(adminRole);
-                Role userRole = roleRepository.findByName("ROLE_USER");
-                if (userRole != null) roles.add(userRole);
-            } else {
-                Role userRole = roleRepository.findByName("ROLE_USER");
-                if (userRole != null) roles.add(userRole);
-            }
-            user.setRoles(roles);
-        } else if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            Role userRole = roleRepository.findByName("ROLE_USER");
-            if (userRole != null) {
-                user.setRoles(Set.of(userRole));
-            }
-        }
-
-
+        encodePasswordIfPresent(user);
+        Set<Role> roles = determineRoles(user);
+        user.setRoles(roles);
         userRepository.save(user);
     }
 
+    private void encodePasswordIfPresent(User user) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+    }
+
+    private Set<Role> determineRoles(User user) {
+        Set<Role> roles = new HashSet<>();
+        String roleInput = user.getRole();
+
+        if (roleInput == null || roleInput.isEmpty()) {
+            return getDefaultRoles();
+        }
+
+        String[] selectedRoles = roleInput.split(",");
+
+        for (String selectedRole : selectedRoles) {
+            String roleName = selectedRole.trim();
+
+            if (isAdminRole(roleName)) {
+                addRoleByName(roles, Role.ROLE_ADMIN);
+            } else if (isUserRole(roleName)) {
+                addRoleByName(roles, Role.ROLE_USER);
+            }
+        }
+        if (roles.isEmpty()) {
+            return getDefaultRoles();
+        }
+
+        return roles;
+    }
+
+    private boolean isAdminRole(String roleName) {
+        return "ADMIN".equals(roleName);
+    }
+
+    private boolean isUserRole(String roleName) {
+        return "USER".equals(roleName);
+    }
+
+    private void addRoleByName(Set<Role> roles, String roleName) {
+        Role role = roleRepository.findByName(roleName);
+        if (role != null) {
+            roles.add(role);
+        }
+    }
+
+    private Set<Role> getDefaultRoles() {
+        Set<Role> roles = new HashSet<>();
+        addRoleByName(roles, Role.ROLE_USER);
+        return roles;
+    }
 
     @Override
     public User findById(Long id) {

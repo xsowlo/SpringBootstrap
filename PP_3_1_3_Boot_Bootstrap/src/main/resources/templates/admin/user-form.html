@@ -149,35 +149,6 @@
             border-bottom: none;
         }
 
-        .role-select {
-            width: 100%;
-            max-width: 340px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            background-color: white;
-            text-align: left;
-            box-sizing: border-box;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-            height: 64px;
-            padding: 4px 0;
-        }
-
-        .role-select option {
-            padding: 8px 12px;
-            background-color: white;
-            color: black;
-        }
-        .role-select option:hover {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .role-select option:checked {
-            background-color: white;
-            color: black;
-        }
-
         .btn-add {
             background-color: #28a745;
             color: white;
@@ -191,6 +162,44 @@
         .btn-add:hover {
             background-color: #218838;
             color: white;
+        }
+
+        .role-listbox {
+            max-width: 340px;
+            margin: 0 auto;
+            display: block;
+            width: 100%;
+            padding: 6px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .role-listbox:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .role-listbox option {
+            padding: 6px 8px;
+            border-radius: 3px;
+        }
+        .role-listbox option:checked {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+
+        .role-hint {
+            display: block;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -276,10 +285,11 @@
 
                     <div>
                         <label class="form-label">Role</label>
-                        <select name="role" class="role-select" size="2">
-                            <option value="ADMIN">ADMIN</option>
+                        <select id="role-select" class="role-listbox" size="2" multiple>
                             <option value="USER" selected>USER</option>
+                            <option value="ADMIN">ADMIN</option>
                         </select>
+                        <small class="role-hint">используй Ctrl для выбора дополнительных ролей</small>
                     </div>
 
                     <button type="submit" class="btn-add">Add new user</button>
@@ -374,6 +384,29 @@
                 });
             }
         });
+
+        const userForm = document.getElementById('userForm');
+        if (userForm) {
+            userForm.addEventListener('submit', function(e) {
+                const select = document.getElementById('role-select');
+                const selectedRoles = Array.from(select.selectedOptions).map(opt => opt.value);
+
+                if (selectedRoles.length === 0) {
+                    selectedRoles.push('USER');
+                    const userOption = Array.from(select.options).find(opt => opt.value === 'USER');
+                    if (userOption) userOption.selected = true;
+                }
+
+                const oldInput = this.querySelector('input[name="role"]');
+                if (oldInput) oldInput.remove();
+
+                const rolesInput = document.createElement('input');
+                rolesInput.type = 'hidden';
+                rolesInput.name = 'role';
+                rolesInput.value = selectedRoles.join(',');
+                this.appendChild(rolesInput);
+            });
+        }
     });
 </script>
 </body>

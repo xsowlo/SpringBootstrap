@@ -89,7 +89,6 @@
             font-weight: 600;
         }
 
-
         .table.table-dimmed tbody tr:nth-child(odd) td {
             background-color: #d1d1d1 !important;
             color: #000 !important;
@@ -143,19 +142,6 @@
             display: block;
             text-align: center;
         }
-        .form-control-yellow {
-            background-color: #ffeeba;
-            border: 1px solid #ced4da;
-            margin-bottom: 15px;
-            text-align: left;
-            width: 100%;
-            max-width: 220px;
-            padding: 8px 12px;
-            box-sizing: border-box;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
         .form-control-white {
             background-color: white;
             border: 1px solid #ced4da;
@@ -181,39 +167,6 @@
             margin-left: auto;
             margin-right: auto;
             display: block;
-        }
-        .role-select {
-            width: 100%;
-            max-width: 220px;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #80bdff;
-            background-color: white;
-            text-align: left;
-            box-sizing: border-box;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-            height: 64px;
-            overflow-y: scroll;
-        }
-        .role-select::-webkit-scrollbar {
-            width: 16px;
-        }
-        .role-select::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .role-select::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-        }
-        .role-select option {
-            padding: 8px 12px;
-            background-color: white;
-            color: black;
-        }
-        .role-select option:checked {
-            background-color: #0d6efd;
-            color: white;
         }
         .modal-footer {
             border-top: 1px solid #dee2e6;
@@ -246,6 +199,44 @@
             color: white;
             border: none;
             padding: 8px 20px;
+        }
+
+        .role-listbox {
+            max-width: 220px;
+            margin: 0 auto;
+            display: block;
+            width: 100%;
+            padding: 6px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .role-listbox:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .role-listbox option {
+            padding: 6px 8px;
+            border-radius: 3px;
+        }
+        .role-listbox option:checked {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+
+        .role-hint {
+            display: block;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -313,9 +304,9 @@
                         <td th:text="${user.age != null ? user.age : ''}"></td>
                         <td th:text="${user.email}"></td>
                         <td>
-                                <span th:each="role, iterStat : ${user.roles}">
-                                    <span th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span><span th:if="${!iterStat.last}"> </span>
-                                </span>
+                            <span th:each="role, iterStat : ${user.roles}">
+                                <span th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span><span th:if="${!iterStat.last}"> </span>
+                            </span>
                         </td>
                         <td>
                             <button type="button" class="btn btn-edit btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
@@ -347,6 +338,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -381,14 +373,17 @@
                     </div>
                     <div>
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" id="edit-password" class="form-control-white">
+                        <input type="password" name="password" id="edit-password" class="form-control-white" placeholder="Leave blank to keep current password">
                     </div>
+
+
                     <div>
                         <label class="form-label">Role</label>
-                        <select name="role" id="edit-role" class="role-select" size="2">
-                            <option value="ADMIN">ADMIN</option>
+                        <select id="edit-role-select" class="role-listbox" size="2" multiple>
                             <option value="USER">USER</option>
+                            <option value="ADMIN">ADMIN</option>
                         </select>
+                        <small class="role-hint">используй Ctrl для выбора дополнительных ролей</small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -399,6 +394,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -463,21 +459,35 @@
         deleteModal.addEventListener('show.bs.modal', applyTableDimming);
         deleteModal.addEventListener('hidden.bs.modal', removeTableDimming);
 
+
         document.querySelectorAll('[data-bs-target="#editModal"]').forEach(button => {
             button.addEventListener('click', function() {
                 document.getElementById('edit-id').value = this.getAttribute('data-id');
                 document.getElementById('edit-id-display').value = this.getAttribute('data-id');
-                document.getElementById('edit-firstname').value = this.getAttribute('data-firstname');
-                document.getElementById('edit-lastname').value = this.getAttribute('data-lastname');
-                document.getElementById('edit-age').value = this.getAttribute('data-age');
-                document.getElementById('edit-email').value = this.getAttribute('data-email');
-                const roles = this.getAttribute('data-roles');
-                const roleSelect = document.getElementById('edit-role');
-                if (roles && roles.includes('ADMIN')) {
-                    roleSelect.value = 'ADMIN';
-                } else {
-                    roleSelect.value = 'USER';
+                document.getElementById('edit-firstname').value = this.getAttribute('data-firstname') || '';
+                document.getElementById('edit-lastname').value = this.getAttribute('data-lastname') || '';
+                document.getElementById('edit-age').value = this.getAttribute('data-age') || '';
+                document.getElementById('edit-email').value = this.getAttribute('data-email') || '';
+
+
+                const select = document.getElementById('edit-role-select');
+                if (select) {
+                    const rolesAttr = this.getAttribute('data-roles') || '';
+
+                    Array.from(select.options).forEach(option => {
+                        option.selected = false;
+                    });
+
+                    if (rolesAttr.includes('ADMIN')) {
+                        const adminOption = Array.from(select.options).find(opt => opt.value === 'ADMIN');
+                        if (adminOption) adminOption.selected = true;
+                    }
+                    if (rolesAttr.includes('USER')) {
+                        const userOption = Array.from(select.options).find(opt => opt.value === 'USER');
+                        if (userOption) userOption.selected = true;
+                    }
                 }
+
                 document.getElementById('edit-password').value = '';
             });
         });
@@ -485,10 +495,10 @@
         document.querySelectorAll('[data-bs-target="#deleteModal"]').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                const firstName = this.getAttribute('data-firstname');
-                const lastName = this.getAttribute('data-lastname');
-                const email = this.getAttribute('data-email');
-                const roles = this.getAttribute('data-roles');
+                const firstName = this.getAttribute('data-firstname') || '';
+                const lastName = this.getAttribute('data-lastname') || '';
+                const email = this.getAttribute('data-email') || '';
+                const roles = this.getAttribute('data-roles') || '';
 
                 document.getElementById('delete-id').value = id;
                 document.getElementById('delete-id-display').value = id;
@@ -501,6 +511,29 @@
                 deleteForm.action = '/admin/user/delete/' + id;
             });
         });
+
+        const editForm = document.getElementById('editForm');
+        if (editForm) {
+            editForm.addEventListener('submit', function(e) {
+                const select = document.getElementById('edit-role-select');
+                const selectedRoles = Array.from(select.selectedOptions).map(opt => opt.value);
+
+                if (selectedRoles.length === 0) {
+                    selectedRoles.push('USER');
+                    const userOption = Array.from(select.options).find(opt => opt.value === 'USER');
+                    if (userOption) userOption.selected = true;
+                }
+
+                const oldInput = this.querySelector('input[name="role"]');
+                if (oldInput) oldInput.remove();
+
+                const rolesInput = document.createElement('input');
+                rolesInput.type = 'hidden';
+                rolesInput.name = 'role';
+                rolesInput.value = selectedRoles.join(',');
+                this.appendChild(rolesInput);
+            });
+        }
     });
 </script>
 </body>
